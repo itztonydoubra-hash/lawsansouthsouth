@@ -9,6 +9,7 @@
    threshold, not a content page. It is fully skippable by keyboard
    and honours prefers-reduced-motion. */
 import { prefersReducedMotion } from "./motion.js";
+import { getWater } from "./water/index.js";
 
 const SEAL_KEY = "lawsan-ss.sealed";
 const HOLD_MS = 1500;
@@ -50,12 +51,9 @@ export function runSealGate() {
   gate.setAttribute("role", "dialog");
   gate.setAttribute("aria-label", "Enter the register");
   gate.classList.add("seal-gate--active");
+  // No painted ink here any more: the gate is a veil over the real
+  // water world, and the ritual drives that simulation directly.
   gate.innerHTML = `
-    <div class="seal-gate__water" aria-hidden="true">
-      <span class="ink ink--1"></span>
-      <span class="ink ink--2"></span>
-      <span class="ink ink--3"></span>
-    </div>
     <div class="seal-gate__center">
       <div class="seal-stamp" aria-hidden="true">
         <div class="seal-stamp__ring"></div>
@@ -76,15 +74,57 @@ export function runSealGate() {
   const stamp = gate.querySelector(".seal-stamp");
   const skipBtn = gate.querySelector(".seal-gate__skip");
 
+  /* Centre of the seal, in client coords — the point the ink gathers to. */
+  const sealCentre = () => {
+    const r = stamp.getBoundingClientRect();
+    return r.width
+      ? { x: r.left + r.width / 2, y: r.top + r.height / 2 }
+      : { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+  };
+
   return new Promise((resolve) => {
     let done = false;
     let holdTimer = null;
-    let progressAnim = null;
+    let gatherTimer = null;
+
+    /* While held, drag real ink inward from a ring so it visibly
+       collects at the seal rather than fading in on a CSS curve. */
+    const startGathering = () => {
+      const water = getWater();
+      if (!water?.live) return;
+      let step = 0;
+      gatherTimer = window.setInterval(() => {
+        const { x: cx, y: cy } = sealCentre();
+        const radius = Math.min(window.innerWidth, window.innerHeight) * 0.34;
+        for (let i = 0; i < 3; i++) {
+          const a = (step * 0.7 + i * ((Math.PI * 2) / 3)) % (Math.PI * 2);
+          const sx = cx + Math.cos(a) * radius;
+          const sy = cy + Math.sin(a) * radius;
+          // velocity points back at the centre
+          water.splatClient(sx, sy, -Math.cos(a) * 1400, Math.sin(a) * 1400, 0.9);
+        }
+        step++;
+      }, 55);
+    };
+    const stopGathering = () => {
+      if (gatherTimer) clearInterval(gatherTimer);
+      gatherTimer = null;
+    };
 
     const finish = () => {
       if (done) return;
       done = true;
       markSealed();
+      stopGathering();
+
+      // The stamp lands in the real water and drives the ink outward.
+      const water = getWater();
+      if (water?.live) {
+        const { x, y } = sealCentre();
+        water.pulse(x, y, 1);
+        window.setTimeout(() => water.pulse(x, y, 0.6), 120);
+      }
+
       // stamp down + crack + clear ring
       gate.classList.add("seal-gate--stamping");
       const clearDelay = reduced ? 220 : 1050;
@@ -106,6 +146,7 @@ export function runSealGate() {
     const startHold = () => {
       if (done) return;
       gate.classList.add("is-holding");
+      if (!reduced) startGathering();
       if (fill) {
         fill.style.transition = `transform ${HOLD_MS}ms linear`;
         requestAnimationFrame(() => (fill.style.transform = "scaleX(1)"));
@@ -116,6 +157,7 @@ export function runSealGate() {
     const cancelHold = () => {
       if (done) return;
       gate.classList.remove("is-holding");
+      stopGathering();
       if (holdTimer) clearTimeout(holdTimer);
       if (fill) {
         fill.style.transition = "transform 260ms ease-out";

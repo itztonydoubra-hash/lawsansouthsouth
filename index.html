@@ -18,13 +18,8 @@
     />
   </head>
   <body>
-    <!-- Ambient water band lives at the edges of the viewport, behind everything -->
-    <div class="water-band" aria-hidden="true">
-      <div class="water-band__edge water-band__edge--top"></div>
-      <div class="water-band__edge water-band__edge--bottom"></div>
-      <div class="water-band__edge water-band__edge--left"></div>
-      <div class="water-band__edge water-band__edge--right"></div>
-    </div>
+    <!-- The water world is a single canvas inserted here by JS and never
+         re-created; see src/lib/water/. -->
 
     <!-- Seal entry ritual overlay (mounted by JS on first visit) -->
     <div id="seal-gate" aria-hidden="true"></div>

@@ -7,9 +7,11 @@
   display: grid;
   gap: var(--gutter);
 }
+/* The map's own aspect is 1000x760, so on short viewports a width-driven
+   size overflows and pushes the zone name and CTA off screen. Cap the
+   width by available height too (58vh x 1.32 = the same aspect). */
 .home__map {
-  width: 100%;
-  max-width: 720px;
+  width: min(100%, 720px, calc(58vh * 1.32));
   margin-inline: auto;
 }
 .home__map svg {

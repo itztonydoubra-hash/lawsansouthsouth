@@ -8,78 +8,28 @@
   z-index: 1000;
   display: none;
 }
+/* A veil, not a backdrop. The dark water behind the ritual is the real
+   simulation; the gate only deepens it so the seal reads clearly. The
+   ink gathering during the hold is driven in JS against that same
+   simulation, which is why there are no painted ink blobs here. */
 .seal-gate--active {
   display: grid !important;
   place-items: center;
-  background: radial-gradient(120% 120% at 50% 40%, #10221c 0%, #08110d 70%, #060c09 100%);
+  background: radial-gradient(
+    120% 120% at 50% 42%,
+    rgba(8, 17, 13, 0.62) 0%,
+    rgba(8, 17, 13, 0.78) 60%,
+    rgba(6, 12, 9, 0.9) 100%
+  );
+  transition: background 600ms ease;
 }
-
-.seal-gate__water {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-.seal-gate__water .ink {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(201, 162, 39, 0.5), rgba(201, 162, 39, 0) 70%);
-  filter: blur(24px);
-  mix-blend-mode: screen;
-  opacity: 0.5;
-}
-.ink--1 {
-  width: 42vmax;
-  height: 42vmax;
-  top: -8%;
-  left: -6%;
-  animation: inkDrift1 12s ease-in-out infinite alternate;
-}
-.ink--2 {
-  width: 34vmax;
-  height: 34vmax;
-  bottom: -10%;
-  right: -4%;
-  animation: inkDrift2 15s ease-in-out infinite alternate;
-}
-.ink--3 {
-  width: 26vmax;
-  height: 26vmax;
-  top: 30%;
-  left: 55%;
-  animation: inkDrift1 18s ease-in-out infinite alternate;
-}
-@keyframes inkDrift1 {
-  from {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  to {
-    transform: translate3d(6%, 8%, 0) scale(1.15);
-  }
-}
-@keyframes inkDrift2 {
-  from {
-    transform: translate3d(0, 0, 0) scale(1.1);
-  }
-  to {
-    transform: translate3d(-8%, -6%, 0) scale(0.95);
-  }
-}
-
-/* When holding, ink gathers toward centre */
-.is-holding .ink {
-  transition: transform 1.4s var(--ease-seal), opacity 1.4s ease;
-}
-.is-holding .ink--1 {
-  transform: translate3d(30vw, 22vh, 0) scale(0.35);
-  opacity: 0.9;
-}
-.is-holding .ink--2 {
-  transform: translate3d(-24vw, -18vh, 0) scale(0.35);
-  opacity: 0.9;
-}
-.is-holding .ink--3 {
-  transform: translate3d(-8vw, 6vh, 0) scale(0.4);
-  opacity: 0.9;
+.seal-gate--active.is-holding {
+  background: radial-gradient(
+    120% 120% at 50% 42%,
+    rgba(8, 17, 13, 0.34) 0%,
+    rgba(8, 17, 13, 0.7) 60%,
+    rgba(6, 12, 9, 0.9) 100%
+  );
 }
 
 .seal-gate__center {
@@ -161,20 +111,31 @@
 }
 
 /* Ink clears outward in a ring, revealing homepage underneath */
+/* The veil clears outward in a ring. Kept translucent so the real water
+   is continuous through the reveal rather than hidden behind a plate. */
 .seal-gate--stamping::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 46%, transparent 0, transparent 0, #08110d 0);
   animation: inkClear 1s var(--ease-out) 0.45s forwards;
   z-index: 1;
 }
 @keyframes inkClear {
   from {
-    background: radial-gradient(circle at 50% 46%, transparent 0, transparent 2%, #08110d 3%);
+    background: radial-gradient(
+      circle at 50% 46%,
+      transparent 0,
+      transparent 2%,
+      rgba(8, 17, 13, 0.82) 3%
+    );
   }
   to {
-    background: radial-gradient(circle at 50% 46%, transparent 0, transparent 140%, #08110d 141%);
+    background: radial-gradient(
+      circle at 50% 46%,
+      transparent 0,
+      transparent 140%,
+      rgba(8, 17, 13, 0.82) 141%
+    );
   }
 }
 .seal-gate--cleared {
@@ -231,8 +192,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ink,
-  .is-holding .ink,
+  .seal-gate--active,
   .seal-stamp {
     animation: none !important;
     transition: opacity 0.2s ease !important;

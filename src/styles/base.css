@@ -33,12 +33,39 @@ body {
   overflow-x: hidden;
 }
 
+/* Layering, bottom to top:
+     0  the water canvas (src/lib/water/)
+     1  scrim, keeps text legible over live water
+     2  grain
+     3  the shell and all content            */
+
+/* Load-bearing for contrast, not decoration.
+   Parchment over peak-density brass ink measures about 3:1 unscrimmed,
+   which fails AA. At 0.55 in the centre it comes back to roughly 6.4:1
+   at the ink's brightest, and higher everywhere the ink is thinner, so
+   body copy stays compliant without flattening the water into a
+   background. Raising the ink brightness in the display shader means
+   re-checking this number, not just nudging it. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 95% 80% at 50% 45%,
+    rgba(15, 26, 22, 0.55) 0%,
+    rgba(15, 26, 22, 0.52) 45%,
+    rgba(15, 26, 22, 0.34) 100%
+  );
+}
+
 /* Very fine grain across Deep Ink — felt, not seen (<3% opacity). */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
   pointer-events: none;
   opacity: 0.028;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -134,66 +161,5 @@ button {
   top: 0.5rem;
 }
 
-/* --- Ambient water band at the viewport edges --- */
-.water-band {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.water-band__edge {
-  position: absolute;
-  background: linear-gradient(var(--angle, 180deg), rgba(62, 145, 134, 0.14), transparent);
-  filter: blur(6px);
-}
-.water-band__edge--top {
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 90px;
-  --angle: 180deg;
-}
-.water-band__edge--bottom {
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 90px;
-  --angle: 0deg;
-}
-.water-band__edge--left {
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 70px;
-  --angle: 90deg;
-}
-.water-band__edge--right {
-  top: 0;
-  bottom: 0;
-  right: 0;
-  width: 70px;
-  --angle: 270deg;
-}
-.water-band__edge::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(120% 60% at 50% 0%, rgba(201, 162, 39, 0.06), transparent 70%);
-  animation: waterDrift 14s ease-in-out infinite alternate;
-}
-@keyframes waterDrift {
-  from {
-    transform: translate3d(-4%, 0, 0) scale(1.02);
-    opacity: 0.6;
-  }
-  to {
-    transform: translate3d(4%, 2%, 0) scale(1.08);
-    opacity: 1;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .water-band__edge::after {
-    animation: none;
-  }
-}
+/* The water canvas positions itself (see src/lib/water/index.js) so it
+   is correct before any stylesheet loads. Nothing to declare here. */

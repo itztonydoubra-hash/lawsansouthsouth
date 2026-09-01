@@ -6,6 +6,7 @@ import "./styles/sections.css";
 
 import { runSealGate } from "./lib/seal-gate.js";
 import { stampTransition } from "./lib/stamp.js";
+import { mountWater } from "./lib/water/index.js";
 import { prefersReducedMotion, ScrollTrigger } from "./lib/motion.js";
 
 import { renderHome, initHome } from "./sections/home.js";
@@ -97,6 +98,10 @@ function renderRoute(id, { animate = true } = {}) {
 }
 
 async function boot() {
+  // The water goes up first and is never re-created. Every tab draws on
+  // top of this one running simulation.
+  mountWater();
+
   app.innerHTML = railHTML();
 
   // Intercept nav clicks to route without a hard reload.

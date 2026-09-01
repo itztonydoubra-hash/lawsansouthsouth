@@ -4,6 +4,7 @@
    stamp + CSS cross-fade. Content is always fully visible when the
    new tab arrives — motion never gates it. */
 import { supportsViewTransitions, prefersReducedMotion } from "./motion.js";
+import { getWater } from "./water/index.js";
 
 const stampEl = () => document.getElementById("stamp-transition");
 
@@ -14,6 +15,15 @@ function playCornerStamp() {
   // force reflow so the animation restarts
   void el.offsetWidth;
   el.classList.add("is-playing");
+
+  // The stamp displaces the actual water rather than animating beside
+  // it — the flourish and the world are the same thing.
+  const water = getWater();
+  if (water?.live) {
+    const r = el.getBoundingClientRect();
+    water.pulse(r.left + r.width / 2, r.top + r.height / 2, 0.85);
+  }
+
   window.setTimeout(() => el.classList.remove("is-playing"), 620);
 }
 
