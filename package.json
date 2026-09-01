@@ -1,0 +1,20 @@
+{
+  "name": "lawsan-south-south",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "LAWSAN South South Zone \u2014 institutional website for the Law Students' Association of Nigeria South South Zone.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.13",
+    "three": "^0.169.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.8"
+  }
+}

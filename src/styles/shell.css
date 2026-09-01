@@ -1,0 +1,185 @@
+/* =============================================================
+   App shell — docket rail + content area
+   ============================================================= */
+
+.shell {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: var(--rail-w) 1fr;
+  min-height: 100vh;
+}
+
+/* --- Docket rail (desktop, fixed left) --- */
+.rail {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem 1.25rem;
+  background: var(--bench);
+  border-right: 1px solid var(--brass-15);
+}
+.rail__brand {
+  display: block;
+  text-decoration: none;
+  color: var(--parchment);
+}
+.rail__brand-mark {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.rail__brand-sub {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  color: var(--parchment-45);
+  text-transform: none;
+  margin-top: 0.35rem;
+}
+.rail__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-top: 0.5rem;
+}
+.rail__link {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.55rem 0.4rem 0.55rem 1rem;
+  color: var(--parchment-70);
+  text-decoration: none;
+  border-radius: var(--radius);
+  transition: color 160ms var(--ease-out), background 160ms var(--ease-out);
+}
+.rail__link:hover {
+  color: var(--parchment);
+  background: rgba(255, 255, 255, 0.03);
+}
+.rail__link .rail__index {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--parchment-45);
+}
+.rail__link .rail__name {
+  font-size: 0.98rem;
+}
+/* brass tick marks the active one */
+.rail__link[aria-current="page"] {
+  color: var(--parchment);
+}
+.rail__link[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: var(--brass);
+  border-radius: 2px;
+}
+.rail__foot {
+  margin-top: auto;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--parchment-45);
+  line-height: 1.5;
+}
+
+/* --- Content area --- */
+.content {
+  min-width: 0;
+  padding: var(--section-y) var(--gutter) calc(var(--section-y) + 2rem);
+}
+.view {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.view__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  color: var(--brass);
+  margin-bottom: 0.6rem;
+}
+.view__title {
+  font-size: var(--step-3);
+  margin-bottom: 0.4rem;
+}
+.view__lede {
+  color: var(--parchment-70);
+  font-size: var(--step-1);
+  max-width: var(--measure);
+  margin-bottom: var(--section-y);
+}
+
+.hairline {
+  height: 1px;
+  border: 0;
+  background: var(--brass-40);
+  margin: 0;
+}
+
+/* --- Bottom tab bar (mobile) --- */
+.tabbar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+  .rail {
+    position: relative;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem var(--gutter);
+    border-right: 0;
+    border-bottom: 1px solid var(--brass-15);
+  }
+  .rail__nav,
+  .rail__foot {
+    display: none;
+  }
+  .content {
+    padding-bottom: calc(72px + 1.5rem);
+  }
+
+  .tabbar {
+    display: flex;
+    position: fixed;
+    z-index: 50;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bench);
+    border-top: 1px solid var(--brass-15);
+    padding: 0.4rem 0.25rem calc(0.4rem + env(safe-area-inset-bottom, 0px));
+    overflow-x: auto;
+  }
+  .tabbar__link {
+    flex: 1 0 auto;
+    min-width: 60px;
+    text-align: center;
+    padding: 0.5rem 0.4rem;
+    color: var(--parchment-70);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.04em;
+    border-top: 2px solid transparent;
+  }
+  .tabbar__link[aria-current="page"] {
+    color: var(--parchment);
+    border-top-color: var(--brass);
+  }
+}

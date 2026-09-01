@@ -1,0 +1,307 @@
+/* =============================================================
+   Seal entry ritual + tab-transition stamp
+   ============================================================= */
+
+#seal-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+}
+.seal-gate--active {
+  display: grid !important;
+  place-items: center;
+  background: radial-gradient(120% 120% at 50% 40%, #10221c 0%, #08110d 70%, #060c09 100%);
+}
+
+.seal-gate__water {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.seal-gate__water .ink {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 162, 39, 0.5), rgba(201, 162, 39, 0) 70%);
+  filter: blur(24px);
+  mix-blend-mode: screen;
+  opacity: 0.5;
+}
+.ink--1 {
+  width: 42vmax;
+  height: 42vmax;
+  top: -8%;
+  left: -6%;
+  animation: inkDrift1 12s ease-in-out infinite alternate;
+}
+.ink--2 {
+  width: 34vmax;
+  height: 34vmax;
+  bottom: -10%;
+  right: -4%;
+  animation: inkDrift2 15s ease-in-out infinite alternate;
+}
+.ink--3 {
+  width: 26vmax;
+  height: 26vmax;
+  top: 30%;
+  left: 55%;
+  animation: inkDrift1 18s ease-in-out infinite alternate;
+}
+@keyframes inkDrift1 {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(6%, 8%, 0) scale(1.15);
+  }
+}
+@keyframes inkDrift2 {
+  from {
+    transform: translate3d(0, 0, 0) scale(1.1);
+  }
+  to {
+    transform: translate3d(-8%, -6%, 0) scale(0.95);
+  }
+}
+
+/* When holding, ink gathers toward centre */
+.is-holding .ink {
+  transition: transform 1.4s var(--ease-seal), opacity 1.4s ease;
+}
+.is-holding .ink--1 {
+  transform: translate3d(30vw, 22vh, 0) scale(0.35);
+  opacity: 0.9;
+}
+.is-holding .ink--2 {
+  transform: translate3d(-24vw, -18vh, 0) scale(0.35);
+  opacity: 0.9;
+}
+.is-holding .ink--3 {
+  transform: translate3d(-8vw, 6vh, 0) scale(0.4);
+  opacity: 0.9;
+}
+
+.seal-gate__center {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 1.75rem;
+  text-align: center;
+}
+
+/* The wax seal rising out of the water */
+.seal-stamp {
+  width: 132px;
+  height: 132px;
+  display: grid;
+  place-items: center;
+  transform: translateY(28px) scale(0.6);
+  opacity: 0;
+  transition: transform 1.2s var(--ease-seal), opacity 1s ease;
+}
+.is-holding .seal-stamp {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+.seal-stamp__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 34%, #c14a3b, #a23b2e 55%, #7c2b21 100%);
+  box-shadow: inset 0 4px 10px rgba(255, 255, 255, 0.15), inset 0 -8px 16px rgba(0, 0, 0, 0.4),
+    0 12px 30px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(201, 162, 39, 0.55);
+}
+.seal-stamp__mark {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  color: rgba(237, 227, 200, 0.92);
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Stamp down + crack */
+.seal-gate--stamping .seal-stamp {
+  animation: sealStampDown 0.9s var(--ease-seal) forwards;
+}
+@keyframes sealStampDown {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  35% {
+    transform: translateY(6px) scale(1.12);
+  }
+  55% {
+    transform: translateY(2px) scale(1.04);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+.seal-gate--stamping .seal-stamp__ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(115deg, transparent 46%, rgba(8, 12, 9, 0.85) 47%, transparent 49%),
+    linear-gradient(200deg, transparent 55%, rgba(8, 12, 9, 0.7) 56%, transparent 58%);
+  animation: sealCrack 0.5s ease 0.35s forwards;
+  opacity: 0;
+}
+@keyframes sealCrack {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Ink clears outward in a ring, revealing homepage underneath */
+.seal-gate--stamping::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 46%, transparent 0, transparent 0, #08110d 0);
+  animation: inkClear 1s var(--ease-out) 0.45s forwards;
+  z-index: 1;
+}
+@keyframes inkClear {
+  from {
+    background: radial-gradient(circle at 50% 46%, transparent 0, transparent 2%, #08110d 3%);
+  }
+  to {
+    background: radial-gradient(circle at 50% 46%, transparent 0, transparent 140%, #08110d 141%);
+  }
+}
+.seal-gate--cleared {
+  animation: gateFade 0.5s ease forwards;
+}
+@keyframes gateFade {
+  to {
+    opacity: 0;
+  }
+}
+
+/* Hold button */
+.seal-gate__hold {
+  position: relative;
+  overflow: hidden;
+  background: rgba(28, 51, 42, 0.55);
+  border: 1px solid var(--brass-40);
+  color: var(--parchment);
+  padding: 0.85rem 1.6rem;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  backdrop-filter: blur(4px);
+}
+.seal-gate__hold-fill {
+  position: absolute;
+  inset: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(90deg, rgba(162, 59, 46, 0.9), rgba(201, 162, 39, 0.7));
+  z-index: 0;
+}
+.seal-gate__hold-label {
+  position: relative;
+  z-index: 1;
+}
+.seal-gate__hint {
+  margin: 0;
+  color: var(--parchment-45);
+  font-size: 0.85rem;
+}
+.seal-gate__skip {
+  background: none;
+  border: none;
+  color: var(--teal);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-size: 0.85rem;
+  padding: 0.2rem 0.3rem;
+}
+.seal-gate__skip:hover {
+  color: var(--brass);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ink,
+  .is-holding .ink,
+  .seal-stamp {
+    animation: none !important;
+    transition: opacity 0.2s ease !important;
+  }
+  .is-holding .seal-stamp {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* --- Tab-transition corner stamp --- */
+#stamp-transition {
+  position: fixed;
+  z-index: 900;
+  right: clamp(1rem, 3vw, 2.5rem);
+  bottom: clamp(1rem, 3vw, 2.5rem);
+  width: 54px;
+  height: 54px;
+  pointer-events: none;
+  opacity: 0;
+}
+#stamp-transition.is-playing {
+  animation: cornerStamp 0.6s var(--ease-seal);
+}
+#stamp-transition::before {
+  content: "SS";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 34%, #c14a3b, #a23b2e 60%, #7c2b21 100%);
+  border: 2px solid rgba(201, 162, 39, 0.6);
+  color: var(--parchment);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+}
+@keyframes cornerStamp {
+  0% {
+    opacity: 0;
+    transform: translateY(-18px) scale(0.7);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(2px) scale(1.08);
+  }
+  60% {
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* View Transitions crossfade tuning */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--dur-tab);
+}
+
+/* Fallback cross-fade */
+.view-fading {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  #stamp-transition.is-playing {
+    animation: none;
+  }
+}

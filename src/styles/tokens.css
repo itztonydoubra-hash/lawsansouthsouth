@@ -1,0 +1,60 @@
+/* =============================================================
+   LAWSAN South South Zone — Token System
+   Locked palette, type scale, and layout primitives.
+   See design.md §5. These are the only tokens; do not add
+   colors here except the reserved stretch-layer accent.
+   ============================================================= */
+
+:root {
+  /* --- Color --- */
+  --ink: #0f1a16; /* Deep Ink — primary background */
+  --bench: #1c332a; /* Bench Green — panels, cards, nav rail */
+  --brass: #c9a227; /* Brass — dividers, hairlines, hover, seal */
+  --teal: #3e9186; /* River Teal — links / interactive highlight only */
+  --parchment: #ede3c8; /* Parchment — text on dark, paper elements */
+  --wax: #a23b2e; /* Wax Seal — one CTA per page, the seal motif */
+
+  /* derived tints, kept within the palette family */
+  --ink-90: rgba(15, 26, 22, 0.9);
+  --bench-60: rgba(28, 51, 42, 0.6);
+  --brass-40: rgba(201, 162, 39, 0.4);
+  --brass-15: rgba(201, 162, 39, 0.15);
+  --parchment-70: rgba(237, 227, 200, 0.7);
+  --parchment-45: rgba(237, 227, 200, 0.45);
+  --parchment-15: rgba(237, 227, 200, 0.15);
+
+  /* --- Type --- */
+  --font-display: "Libre Caslon Display", Georgia, "Times New Roman", serif;
+  --font-body: "Archivo", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Headline steps ~ 17 / 26 / 40 / 64 (fluid) */
+  --step-0: 1.0625rem; /* 17px base body */
+  --step-1: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem); /* ~26 */
+  --step-2: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem); /* ~40 */
+  --step-3: clamp(2.5rem, 1.6rem + 4vw, 4rem); /* ~64 */
+  --step-hero: clamp(2.75rem, 1.4rem + 6vw, 5.25rem);
+
+  --lh-tight: 1.08;
+  --lh-body: 1.6;
+
+  /* --- Layout --- */
+  --rail-w: 232px;
+  --measure: 68ch; /* keep line length under ~75 chars */
+  --gutter: clamp(1.25rem, 0.8rem + 2vw, 2.75rem);
+  --section-y: clamp(3rem, 2rem + 5vw, 6rem);
+  --radius: 2px; /* almost square — institutional, not SaaS-round */
+
+  /* --- Motion --- */
+  --ease-seal: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-tab: 520ms;
+
+  --focus-ring: 0 0 0 2px var(--ink), 0 0 0 4px var(--brass);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-tab: 200ms;
+  }
+}

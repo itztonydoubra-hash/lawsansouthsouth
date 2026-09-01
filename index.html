@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="The LAWSAN South South Zone \u2014 six chapters answering to one register. Leadership, chapters, publications, and record for the Law Students' Association of Nigeria, South South Zone."
+    />
+    <meta name="theme-color" content="#0F1A16" />
+    <title>LAWSAN South South Zone</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Libre+Caslon+Display&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Ambient water band lives at the edges of the viewport, behind everything -->
+    <div class="water-band" aria-hidden="true">
+      <div class="water-band__edge water-band__edge--top"></div>
+      <div class="water-band__edge water-band__edge--bottom"></div>
+      <div class="water-band__edge water-band__edge--left"></div>
+      <div class="water-band__edge water-band__edge--right"></div>
+    </div>
+
+    <!-- Seal entry ritual overlay (mounted by JS on first visit) -->
+    <div id="seal-gate" aria-hidden="true"></div>
+
+    <!-- App root -->
+    <div id="app"></div>
+
+    <!-- Tab-transition seal stamp (fallback path) -->
+    <div id="stamp-transition" aria-hidden="true"></div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
